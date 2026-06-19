@@ -1,5 +1,6 @@
 "use client";
 import {useState} from "react";
+import { Search } from "lucide-react";
 
 interface WeatherData {
     city: string;
@@ -62,9 +63,13 @@ export default function Home() {
       <main className="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center p-6">
       <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
 
-        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Weather App
+        <h1 className="text-3xl font-bold text-center text-gray-800">
+          SkyCast
         </h1>
+
+        <p className="text-center text-gray-500 mt-2 mb-6">
+          Get real-time temperature updates for cities around the world.
+        </p>
 
       <div className="flex gap-2 mb-6">
         <input
@@ -82,9 +87,10 @@ export default function Home() {
 
         <button
           onClick={backend}
-          className="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center"
+          aria-label="Search"
         >
-          Search
+          <Search size={20} />
         </button>
       </div>
 
