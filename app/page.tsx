@@ -1,65 +1,107 @@
-import Image from "next/image";
+"use client";
+import {useState} from "react";
+
+interface WeatherData {
+    city: string;
+    temperature: number;
+}
+
+/* export default function Home() {
+    const backend = async () => {
+        const response = await fetch("http://localhost:5001/weather/delhi");
+        const data = await response.json();
+        console.log(data);
+    };
+
+    return (
+        <div>
+            <h1>Weather App</h1>
+            <button onClick={backend}>Backend</button>
+        </div>
+    );
+}
+*/
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    const [city, setCity] = useState("");
+    const [weather, setWeather] = useState<WeatherData | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const backend = async () => {
+        if (!city.trim()) return;
+        setLoading(true);
+        setError("");
+        const response = await fetch(
+          `https://weather-backend-3y1l.onrender.com/weather/${city}`
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          setWeather(null);
+          setError(data.error);
+          setLoading(false);
+          return;
+        }
+        setWeather(data);
+        setLoading(false);
+    };
+
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center p-6">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
+
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Weather App
+        </h1>
+
+      <div className="flex gap-2 mb-6">
+        <input
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+            backend();
+          }
+
+}}
+          placeholder="Enter city..."
+          className="flex-1 border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+        <button
+          onClick={backend}
+          className="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition"
+        >
+          Search
+        </button>
+      </div>
+
+      {weather && (
+        <div className="bg-blue-50 rounded-2xl p-6 text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            {weather.city}
+          </h2>
+          <p className="text-5xl font-bold text-blue-600">
+            {weather.temperature}°
+          </p>
+          <p className="text-gray-500 mt-2">
+            Current Temperature
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      )}
+
+      {loading && (
+        <p className="text-center text-gray-500">
+          Loading...
+        </p>
+      )}
+
+      {error && (
+        <p className="text-red-500 text-center mt-4">
+          {error}
+        </p>
+      )}
+
+      </div>
+    </main>
   );
 }
