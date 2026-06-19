@@ -29,20 +29,33 @@ export default function Home() {
     const [error, setError] = useState("");
     const backend = async () => {
         if (!city.trim()) return;
-        setLoading(true);
-        setError("");
-        const response = await fetch(
-          `https://weather-backend-3y1l.onrender.com/weather/${city}`
-        );
-        const data = await response.json();
-        if (!response.ok) {
-          setWeather(null);
-          setError(data.error);
-          setLoading(false);
-          return;
+
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await fetch(
+              `https://weather-backend-3y1l.onrender.com/weather/${city}`
+            );
+
+            console.log("status:", response.status);
+
+            const data = await response.json();
+            console.log("data:", data);
+
+            if (!response.ok) {
+              setWeather(null);
+              setError(data.error);
+              return;
+            }
+
+            setWeather(data);
+        } catch (err) {
+            console.error(err);
+            setError("Request failed");
+        } finally {
+            setLoading(false);
         }
-        setWeather(data);
-        setLoading(false);
     };
 
     return (
