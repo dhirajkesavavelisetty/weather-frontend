@@ -35,7 +35,7 @@ export default function Home() {
             setError("");
 
             const response = await fetch(
-              `https://weather-backend-3y1l.onrender.com/weather/${city}`
+              `https://weather-backend-3y11.onrender.com/weather/${city}`
             );
 
             console.log("status:", response.status);
