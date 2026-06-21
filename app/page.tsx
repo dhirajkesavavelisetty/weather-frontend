@@ -52,7 +52,7 @@ export default function Home() {
             setWeather(null);
 
             const response = await fetch(
-              `https://weather-backend-3y11.onrender.com/weather/${city}`
+              `${process.env.NEXT_PUBLIC_API_URL}/weather/${city.trim()}`
             );
 
             console.log("status:", response.status);
@@ -124,7 +124,7 @@ export default function Home() {
             {weather.city.charAt(0).toUpperCase() + weather.city.slice(1)}
           </h2>
           <p className="text-5xl font-bold text-blue-600">
-            {weather.temperature}°C
+            {Math.round(weather.temperature)}°C
           </p>
           <p className="text-gray-500 mt-2">
             Current Temperature
